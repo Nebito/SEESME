@@ -1,0 +1,7 @@
+{
+  "name": "SEESME - Society of Eritrean Earth Scientists and Mining Engineers",
+  "description": "A professional digital platform for the Society of Eritrean Earth Scientists and Mining Engineers, featuring a publication repository, news portal, educational resources, and career center.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
