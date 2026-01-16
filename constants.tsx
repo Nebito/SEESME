@@ -11,7 +11,8 @@ export const MOCK_PUBLICATIONS: Publication[] = [
     keywords: ['Nubian Shield', 'Tectonics', 'Mineralization'],
     type: PublicationType.JOURNAL,
     doi: '10.1000/seesme.2023.01',
-    url: '#'
+    url: '#',
+    downloads: 1245
   },
   {
     id: '2',
@@ -21,7 +22,8 @@ export const MOCK_PUBLICATIONS: Publication[] = [
     abstract: 'Annual technical report on the environmental mitigation strategies and tailings facility safety.',
     keywords: ['Mining', 'Environment', 'Tailings'],
     type: PublicationType.TECHNICAL_REPORT,
-    url: '#'
+    url: '#',
+    downloads: 890
   },
   {
     id: '3',
@@ -31,7 +33,8 @@ export const MOCK_PUBLICATIONS: Publication[] = [
     abstract: 'Exploration of thermal anomalies and potential power generation sites in the Eritrean rift system.',
     keywords: ['Geothermal', 'Energy', 'Rift Valley'],
     type: PublicationType.CONFERENCE,
-    url: '#'
+    url: '#',
+    downloads: 3210
   },
   {
     id: '4',
@@ -41,7 +44,8 @@ export const MOCK_PUBLICATIONS: Publication[] = [
     abstract: 'Structural controls and geochemistry of gold-bearing quartz veins in northern Eritrea.',
     keywords: ['Gold', 'Geochemistry', 'Zara District'],
     type: PublicationType.JOURNAL,
-    url: '#'
+    url: '#',
+    downloads: 567
   },
   {
     id: '5',
@@ -51,7 +55,8 @@ export const MOCK_PUBLICATIONS: Publication[] = [
     abstract: 'Seismic interpretation and stratigraphic analysis of the offshore Eritrean margin.',
     keywords: ['Hydrocarbons', 'Red Sea', 'Seismic'],
     type: PublicationType.TECHNICAL_REPORT,
-    url: '#'
+    url: '#',
+    downloads: 432
   },
   {
     id: '6',
@@ -61,7 +66,8 @@ export const MOCK_PUBLICATIONS: Publication[] = [
     abstract: 'Assessment of heavy metal contamination in rural water sources near mining sites.',
     keywords: ['Environment', 'Groundwater', 'Artisanal Mining'],
     type: PublicationType.JOURNAL,
-    url: '#'
+    url: '#',
+    downloads: 1102
   }
 ];
 

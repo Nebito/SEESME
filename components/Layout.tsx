@@ -9,6 +9,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [language, setLanguage] = useState<'EN' | 'TI'>('EN');
 
   const navItems = [
     { label: 'Home', id: 'home' },
@@ -23,11 +24,21 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
     <div className="min-h-screen flex flex-col bg-white">
       {/* Top Bar */}
       <div className="bg-[#004A26] text-white py-2 px-4 md:px-8 text-sm flex justify-between items-center">
-        <span>Society of Eritrean Earth Scientists and Mining Engineers</span>
+        <span>{language === 'EN' ? 'Society of Eritrean Earth Scientists and Mining Engineers' : 'ማሕበር ሰብ ሞያ ስነ-ምድሪን መሃንድሳት መዓድን ኤርትራ'}</span>
         <div className="hidden md:flex space-x-4">
-          <button className="hover:underline">English</button>
+          <button 
+            onClick={() => setLanguage('EN')}
+            className={`hover:underline ${language === 'EN' ? 'font-bold text-[#C9A227]' : ''}`}
+          >
+            English
+          </button>
           <span>|</span>
-          <button className="hover:underline font-semibold">ትግርኛ</button>
+          <button 
+            onClick={() => setLanguage('TI')}
+            className={`hover:underline ${language === 'TI' ? 'font-bold text-[#C9A227]' : ''}`}
+          >
+            ትግርኛ
+          </button>
         </div>
       </div>
 
@@ -35,18 +46,12 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
       <header className="sticky top-0 z-50 bg-white shadow-md border-b border-slate-100">
         <nav className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center h-20">
           <div className="flex items-center space-x-4 cursor-pointer" onClick={() => setActiveTab('home')}>
-            <img 
-              src="logo.png" 
-              alt="SEESME Logo" 
-              className="w-14 h-14 object-contain"
-              onError={(e) => {
-                // Fallback if logo.png is not found in local context
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
+            <div className="w-14 h-14 bg-[#004A26] rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">S</div>
             <div>
               <h1 className="text-xl font-bold tracking-tight text-[#004A26] uppercase leading-none">SEESME</h1>
-              <p className="text-[10px] text-slate-500 uppercase font-medium mt-1">Eritrean Geoscience and Mining Engineering Hub</p>
+              <p className="text-[10px] text-slate-500 uppercase font-medium mt-1">
+                {language === 'EN' ? 'Eritrean Geoscience Hub' : 'ማእከል ስነ-ምድሪ ኤርትራ'}
+              </p>
             </div>
           </div>
 
@@ -109,7 +114,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
         <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
           <div className="col-span-1 md:col-span-2">
             <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-4 mb-6">
-               <img src="logo.png" alt="SEESME" className="w-16 h-16 object-contain invert grayscale brightness-200" />
+               <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white text-2xl font-bold">S</div>
                <div>
                   <h3 className="text-white text-lg font-bold uppercase tracking-widest">SEESME</h3>
                   <p className="max-w-md text-sm leading-relaxed mt-2 opacity-70">
@@ -119,36 +124,40 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
             </div>
             <div className="flex justify-center md:justify-start space-x-4">
               {['LinkedIn', 'Twitter', 'Facebook'].map(social => (
-                <a key={social} href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-[#C9A227] hover:text-white transition-colors">
+                <button 
+                  key={social} 
+                  onClick={() => alert(`Redirecting to SEESME ${social}...`)}
+                  className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-[#C9A227] hover:text-white transition-colors"
+                >
                   <span className="sr-only">{social}</span>
                   <div className="w-5 h-5 bg-current opacity-20"></div>
-                </a>
+                </button>
               ))}
             </div>
           </div>
           <div>
             <h3 className="text-white text-sm font-bold mb-4 uppercase tracking-widest">Quick Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><button onClick={() => setActiveTab('publications')} className="hover:text-white">Publications</button></li>
-              <li><button onClick={() => setActiveTab('news')} className="hover:text-white">News & Events</button></li>
-              <li><button onClick={() => setActiveTab('careers')} className="hover:text-white">Career Board</button></li>
-              <li><button className="hover:text-white">Contact Us</button></li>
+              <li><button onClick={() => setActiveTab('publications')} className="hover:text-white transition-colors">Publications</button></li>
+              <li><button onClick={() => setActiveTab('news')} className="hover:text-white transition-colors">News & Events</button></li>
+              <li><button onClick={() => setActiveTab('careers')} className="hover:text-white transition-colors">Career Board</button></li>
+              <li><button onClick={() => setActiveTab('resources')} className="hover:text-white transition-colors">Educational Resources</button></li>
             </ul>
           </div>
           <div>
             <h3 className="text-white text-sm font-bold mb-4 uppercase tracking-widest">Contact</h3>
             <ul className="space-y-2 text-sm">
               <li>Asmara, Eritrea</li>
-              <li>info@seesme.org</li>
-              <li>+291 1 123 456</li>
+              <li><a href="mailto:info@seesme.org" className="hover:text-[#C9A227]">info@seesme.org</a></li>
+              <li><a href="tel:+2911123456" className="hover:text-[#C9A227]">+291 1 123 456</a></li>
             </ul>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 md:px-8 mt-16 pt-8 border-t border-slate-800 text-xs text-center md:text-left flex flex-col md:flex-row justify-between items-center opacity-40">
           <p>© {new Date().getFullYear()} Society of Eritrean Earth Scientists and Mining Engineers. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <a href="#" className="hover:underline">Privacy Policy</a>
-            <a href="#" className="hover:underline">Terms of Service</a>
+            <button onClick={() => alert('Legal: Privacy Policy')} className="hover:underline">Privacy Policy</button>
+            <button onClick={() => alert('Legal: Terms of Service')} className="hover:underline">Terms of Service</button>
           </div>
         </div>
       </footer>
