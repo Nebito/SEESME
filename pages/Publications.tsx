@@ -15,14 +15,24 @@ const Publications: React.FC = () => {
   
   const [publications, setPublications] = useState<Publication[]>(MOCK_PUBLICATIONS);
 
-  const authors = useMemo(() => Array.from(new Set(publications.map(p => p.author))).sort(), [publications]);
-  const allKeywords = useMemo(() => Array.from(new Set(publications.flatMap(p => p.keywords))).sort(), [publications]);
-  const years = useMemo(() => Array.from(new Set(publications.map(p => new Date(p.date).getFullYear()))).sort((a, b) => b - a), [publications]);
+  // Calculate unique years and available range from the data
+  const { authors, allKeywords, years, minPossibleYear, maxPossibleYear } = useMemo(() => {
+    const pubYears = publications.map(p => new Date(p.date).getFullYear());
+    return {
+      authors: Array.from(new Set(publications.map(p => p.author))).sort(),
+      allKeywords: Array.from(new Set(publications.flatMap(p => p.keywords))).sort(),
+      years: Array.from(new Set(pubYears)).sort((a, b) => b - a),
+      minPossibleYear: pubYears.length > 0 ? Math.min(...pubYears) : 1900,
+      maxPossibleYear: pubYears.length > 0 ? Math.max(...pubYears) : new Date().getFullYear()
+    };
+  }, [publications]);
 
-  const [yearRange, setYearRange] = useState<[number, number]>([
-    years.length > 0 ? Math.min(...years) : 1900, 
-    years.length > 0 ? Math.max(...years) : new Date().getFullYear()
-  ]);
+  const [yearRange, setYearRange] = useState<[number, number]>([minPossibleYear, maxPossibleYear]);
+
+  // Sync year range when data is loaded/changed
+  useEffect(() => {
+    setYearRange([minPossibleYear, maxPossibleYear]);
+  }, [minPossibleYear, maxPossibleYear]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -53,9 +63,15 @@ const Publications: React.FC = () => {
     setActiveType('All');
     setSelectedAuthors([]);
     setSelectedKeywords([]);
-    if (years.length > 0) {
-      setYearRange([Math.min(...years), Math.max(...years)]);
-    }
+    setYearRange([minPossibleYear, maxPossibleYear]);
+  };
+
+  const handleMinYearChange = (val: number) => {
+    setYearRange(prev => [val, Math.max(val, prev[1])]);
+  };
+
+  const handleMaxYearChange = (val: number) => {
+    setYearRange(prev => [Math.min(val, prev[0]), val]);
   };
 
   const handleDownload = async (pubId: string) => {
@@ -83,6 +99,38 @@ const Publications: React.FC = () => {
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Filters</h3>
                 <button onClick={resetFilters} className="text-xs text-[#004A26] font-bold hover:underline">Clear All</button>
+              </div>
+
+              {/* Year Range Filter */}
+              <div className="mb-8">
+                <label className="block text-sm font-bold text-slate-700 mb-3">Year Range</label>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">From</span>
+                      <select 
+                        value={yearRange[0]} 
+                        onChange={(e) => handleMinYearChange(parseInt(e.target.value))}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-[#004A26] transition-all"
+                      >
+                        {years.slice().reverse().map(y => <option key={y} value={y}>{y}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">To</span>
+                      <select 
+                        value={yearRange[1]} 
+                        onChange={(e) => handleMaxYearChange(parseInt(e.target.value))}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-[#004A26] transition-all"
+                      >
+                        {years.map(y => <option key={y} value={y}>{y}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="text-[10px] text-slate-400 text-center italic">
+                    Showing results between {yearRange[0]} and {yearRange[1]}
+                  </div>
+                </div>
               </div>
 
               {/* Author Multi-Select Dropdown */}
@@ -178,7 +226,10 @@ const Publications: React.FC = () => {
                     </div>
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-2">{pub.title}</h3>
-                  <p className="text-[#C9A227] font-semibold text-sm mb-4">{pub.author}</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <p className="text-[#C9A227] font-semibold text-sm">{pub.author}</p>
+                    <span className="text-xs text-slate-400 font-medium">Published: {new Date(pub.date).getFullYear()}</span>
+                  </div>
                   <p className="text-slate-500 text-sm italic mb-6">"{pub.abstract}"</p>
                   <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
                     <div className="flex space-x-6">
@@ -195,6 +246,13 @@ const Publications: React.FC = () => {
                   </div>
                 </div>
               ))}
+
+              {filtered.length === 0 && (
+                <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
+                  <p className="text-slate-400 italic">No publications found matching your selected criteria.</p>
+                  <button onClick={resetFilters} className="mt-4 text-[#004A26] font-bold hover:underline">Clear all filters</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
